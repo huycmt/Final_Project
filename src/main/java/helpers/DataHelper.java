@@ -21,6 +21,11 @@ public class DataHelper {
         return faker.harryPotter().quote();
     }
 
+    public static String name(){
+        info("\tCreate new random name");
+        return faker.funnyName().name();
+    }
+
     public static String pid() {
         return faker.bothify("??######");
     }

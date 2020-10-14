@@ -18,9 +18,9 @@ public class BasePage {
     private By _usernameTb = By.cssSelector("input[name='username']");
     private By _passwordTb = By.cssSelector("input[name='passwd']");
     private By _loginBtn = By.cssSelector("button");
-    private By _contentTab = By.xpath("//ul[@id='menu']//a[normalize-space(text())='Content']");
-    private By _articlesTab = By.xpath("//ul[@id='menu']//a[normalize-space(text())='Articles']");
-
+    private String _tabLevel1 = "//ul[@id='menu']/li/a[normalize-space(text())='%s']";//content
+    private String _tabLevel2 = "//ul[@id='menu']/li/a[normalize-space(text())='%s']/following-sibling::ul/li/a[normalize-space(text())='%s']";//articles
+    private String _sideTab = "//div[@id='sidebar']//a[contains(.,'%s')]";
 
     //Elements
     private WebElement username() {
@@ -36,13 +36,18 @@ public class BasePage {
     }
 
     private WebElement contentTab() {
-        return getDriver().findElement(_contentTab);
+        return getDriver().findElement(By.xpath(String.format(_tabLevel1,"Content")));
     }
 
     private WebElement articlesTab() {
-        return getDriver().findElement(_articlesTab);
+        return getDriver().findElement(By.xpath(String.format(_tabLevel2,"Content","Articles")));
     }
 
+    private WebElement componentsTab(){ return getDriver().findElement(By.xpath(String.format(_tabLevel1,"Components")));}
+    private WebElement contactTab(){return getDriver().findElement(By.xpath(String.format(_tabLevel2,"Component","Contacts")));}
+    private WebElement bannersTab(){return  getDriver().findElement(By.xpath(String.format(_tabLevel2,"Components","Banners")));}
+    private WebElement bannersClientsTab(){ return getDriver().findElement(By.xpath(String.format(_sideTab,"Clients")));}
+    private WebElement bannersCategoriesTab(){return getDriver().findElement(By.xpath(String.format(_sideTab,"Categories")));}
     public void clickTab(Tab tab) {
         switch (tab) {
             case CONTENT:
@@ -50,6 +55,21 @@ public class BasePage {
                 break;
             case ARTICLES:
                 clickElement(articlesTab());
+                break;
+            case COMPONENTS:
+                clickElement(componentsTab());
+                break;
+            case CONTACTS:
+                clickElement(contactTab());
+                break;
+            case BANNERS:
+                clickElement(bannersTab());
+                break;
+            case BANNERS_CLIENTS:
+                clickElement(bannersClientsTab());
+                break;
+            case BANNERS_CATEGORIES:
+                clickElement(bannersCategoriesTab());
                 break;
         }
     }
@@ -62,7 +82,8 @@ public class BasePage {
     }
 
     public void clickElement(WebElement element) {
-        info("\t\tClick on " + getText(element));
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        info("\t\tClick on " + getText(element)+" "+stackTrace[2].getMethodName());
         //scrollToView(element);
         waitForElementVisibility(element);
         waitUntilElementClickable(element);
@@ -81,7 +102,7 @@ public class BasePage {
 
     public void waitUntilElementVisibility(WebElement element) {
         WebDriverWait wait = new WebDriverWait(getDriver(), TIME_OUT_SHORT);
-        wait.until(ExpectedConditions.visibilityOf(element));
+        wait.until(ExpectedConditions.stalenessOf(element));
     }
     public void waitUntilElementContainsText(WebElement element,String text) {
         WebDriverWait wait = new WebDriverWait(getDriver(), TIME_OUT_SHORT);
@@ -112,6 +133,11 @@ public class BasePage {
     //Methods
     public enum Tab {
         CONTENT,
-        ARTICLES
+        ARTICLES,
+        COMPONENTS,
+        CONTACTS,
+        BANNERS,
+        BANNERS_CLIENTS,
+        BANNERS_CATEGORIES
     }
 }

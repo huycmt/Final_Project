@@ -32,11 +32,12 @@ public class ArticleTest extends BaseTest{
         articleManagerPage.clickNewBtn();
 
         info("[STEP 7 - 11]");
-        newArticlePage.createNewArticle(title,articleText,CATEGORY.get(1),PUBLISHED);
+        newArticlePage.createNewArticle(title,articleText,ARTICLE_CATEGORY.get(1),PUBLISHED);
 
 
         info("[STEP 12]\nVerify the article is saved successfully");
-        Assert.assertEquals(articleManagerPage.getMessage(),SAVED_MESSAGE,"Message displayed incorrectly");
+        Assert.assertEquals(articleManagerPage.getMessage(),SAVED_ARTICLE_MESSAGE,"Message displayed incorrectly");
+        Assert.assertTrue(articleManagerPage.checkArticleDisplay(title),"Article is not displayed");
 
     }
     @Test(testName = "TO_JOOMLA_ARTICLE_002",description = "User can edit an article")
@@ -52,17 +53,19 @@ public class ArticleTest extends BaseTest{
         articleManagerPage.clickEditBtn();
 
         info("[STEP 16 - 18]");
-        newArticlePage.createNewArticle(title(),articleText(),CATEGORY.get(0),PUBLISHED);
+        String newTitle =title();
+        newArticlePage.createNewArticle(newTitle,articleText(),ARTICLE_CATEGORY.get(0),PUBLISHED);
 
         info("[STEP 19]\nVerify the article is saved successfully");
-        Assert.assertEquals(articleManagerPage.getMessage(),SAVED_MESSAGE,"Message displayed incorrectly");
+        Assert.assertEquals(articleManagerPage.getMessage(),SAVED_ARTICLE_MESSAGE,"Message displayed incorrectly");
+        Assert.assertTrue(articleManagerPage.checkArticleDisplay(newTitle),"Article is not displayed");
 
     }
 
     @Test(testName = "TO_JOOMLA_ARTICLE_009",description = "User can search for articles using the filter text field")
     public void TO_JOOMLA_ARTICLE_009(){
         info("[STEP 13 - 14]");
-        articleManagerPage.findArticles(title);
+        articleManagerPage.findByTitle(title);
 
         info("[STEP 15]\nVerify user can search for articles using the filter text field");
         Assert.assertTrue(articleManagerPage.checkTitleMatchesKeywordEntered(title),"The titles of displayed articles are not matched with the entered keyword");
@@ -75,12 +78,14 @@ public class ArticleTest extends BaseTest{
 
         info("[STEP 15]\nVerify the article is featured successfully");
         Assert.assertEquals(articleManagerPage.getMessage(),FEATURED_MESSAGE,"Article feature status toggle failed");
+        Assert.assertEquals(articleManagerPage.getAttributeFeatureIcon(title,AUTHOR),"icon-featured", "The icon of the selected item displayed is not 'Featured'.");
 
         info("[STEP 16 - 17]");
         articleManagerPage.toggleFeatured(title,AUTHOR);
 
         info("[STEP 18]\nVerify the article is un-featured successfully");
         Assert.assertEquals(articleManagerPage.getMessage(),UN_FEATURED_MESSAGE,"Article feature status toggle failed");
+        Assert.assertEquals(articleManagerPage.getAttributeFeatureIcon(title,AUTHOR),"icon-unfeatured", "The icon of the selected item displayed is not 'Unfeatured'.");
 
     }
 }

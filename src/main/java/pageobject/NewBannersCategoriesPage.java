@@ -5,7 +5,8 @@ import org.openqa.selenium.WebElement;
 
 import static helpers.DriverHelper.getDriver;
 
-public class NewArticlePage extends ArticleManagerPage   {
+public class NewBannersCategoriesPage extends BannersCategoriesManagerPage {
+
     //Locator
     private By _titleTb = By.cssSelector("input#jform_title");
     private By _categoryArrowDown = By.cssSelector("div#jform_catid_chzn");
@@ -38,21 +39,4 @@ public class NewArticlePage extends ArticleManagerPage   {
     private WebElement saveAndCloseBtn() {
         return getDriver().findElement(_saveAndCloseBtn);
     }
-
-    //Methods
-    public void createNewArticle(String title, String articleText, String category, String status) {
-        enterData(titleTb(), title);
-        enterData(articleTextTa(), articleText);
-
-        selectItem(categoryArrowDown(), category);
-        selectItem(statusArrowDown(), status);
-
-        clickElement(saveAndCloseBtn());
-    }
-
-    public void selectItem(WebElement arrowDown, String dropdown) {
-        clickElement(arrowDown);
-        clickElement(dropdownList(dropdown));
-    }
-
 }
